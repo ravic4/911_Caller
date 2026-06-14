@@ -1,0 +1,30 @@
+{
+  "name": "safe911",
+  "version": "1.0.0",
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
+  },
+  "dependencies": {
+    "@elevenlabs/react-native": "^0.2.0",
+    "@livekit/react-native": "^2.4.0",
+    "@livekit/react-native-webrtc": "^125.0.7",
+    "expo": "~53.0.0",
+    "expo-av": "~15.0.0",
+    "expo-camera": "~16.0.0",
+    "expo-file-system": "~18.0.0",
+    "expo-location": "~18.0.0",
+    "expo-router": "~4.0.0",
+    "expo-sensors": "~14.0.0",
+    "expo-sharing": "~12.0.0",
+    "livekit-client": "^2.7.0",
+    "react": "18.3.2",
+    "react-native": "0.76.9"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "typescript": "~5.3.3"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "Safe911",
+    "slug": "safe911",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "safe911",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.safe911.app",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Safe911 needs microphone access to connect you with emergency services.",
+        "NSCameraUsageDescription": "Safe911 needs camera access to record evidence in emergencies.",
+        "NSLocationWhenInUseUsageDescription": "Safe911 uses your location to send help to the right place.",
+        "NSLocationAlwaysUsageDescription": "Safe911 uses background location to alert contacts even when the app is closed.",
+        "UIBackgroundModes": ["audio", "location", "fetch"]
+      }
+    },
+    "android": {
+      "package": "com.safe911.app",
+      "permissions": [
+        "RECORD_AUDIO",
+        "CAMERA",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE",
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      "expo-location",
+      [
+        "expo-camera",
+        { "cameraPermission": "Safe911 uses your camera to record evidence." }
+      ],
+      ["expo-av", { "microphonePermission": "Safe911 uses your mic for emergency calls." }]
+    ]
+  }
+}
