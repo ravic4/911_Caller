@@ -36,11 +36,12 @@ async function parseTranscript(transcript) {
         content: `This is a call transcript from an emergency app disguised as a pizza website called "Slice & Co." The caller uses pizza ordering as cover language for a real emergency.
 
 Extract these fields and respond with ONLY valid JSON — no markdown, no explanation:
-- request_type: Type of emergency (e.g. "Police", "Medical", "Fire", "Unknown")
-- party_size: Number of people as an integer, or null if not mentioned
-- address: Location/delivery address, or null if not mentioned
+- request_type: Type of emergency ("Police", "Medical", "Fire", or "Unknown")
+- party_size: Number of people at the scene as an integer, or null if not mentioned
+- officers_needed: How many police officers/units should be dispatched based on severity, as an integer (estimate — e.g. 2 for minor, 4-6 for serious). null if clearly not a police matter.
+- address: Location/delivery address as a string, or null if not mentioned
 - caller_name: Name of the caller, or null if not mentioned
-- notes: Any other relevant details about the situation
+- notes: Any other relevant situational details
 
 Transcript:
 ${transcript}
@@ -62,13 +63,15 @@ async function saveIncident(order, parsed) {
     method: "POST",
     headers: SUPA_HDR(),
     body: JSON.stringify({
-      order_id:       order.id,
+      order_id:        order.id,
       conversation_id: order.conversation_id ?? null,
-      request_type:   parsed.request_type  ?? "Unknown",
-      party_size:     parsed.party_size    ?? null,
-      address:        parsed.address       ?? null,
-      caller_name:    parsed.caller_name   ?? null,
-      notes:          parsed.notes         ?? null,
+      transcript:      order.message,
+      request_type:    parsed.request_type    ?? "Unknown",
+      party_size:      parsed.party_size      ?? null,
+      officers_needed: parsed.officers_needed ?? null,
+      address:         parsed.address         ?? null,
+      caller_name:     parsed.caller_name     ?? null,
+      notes:           parsed.notes           ?? null,
     }),
   });
 }
@@ -83,7 +86,7 @@ export async function parseNewOrders() {
       const parsed = await parseTranscript(order.message);
       await saveIncident(order, parsed);
       results.push({ id: order.id, status: "parsed", parsed });
-      console.log(`[Parse] ${order.id} → ${parsed.request_type}`);
+      console.log(`[Parse] ${order.id} → ${parsed.request_type}, ${parsed.officers_needed} officers`);
     } catch (e) {
       console.error(`[Parse] Failed ${order.id}:`, e.message);
       results.push({ id: order.id, status: "error", error: e.message });

@@ -425,30 +425,28 @@
   </div>
 </div>
 
-<!-- DISPATCH QUEUE -->
+<!-- CALL REPORTS -->
 <div class="dispatch-section">
   <div class="section-hd">
     <div class="live-chip"><div class="live-pip"></div>Live</div>
-    <h2>Dispatch Queue</h2>
+    <h2>Call Reports</h2>
+    <div class="dh-right" style="margin-left:auto;display:flex;align-items:center;gap:10px">
+      <span id="parse-status" style="font-size:0.75rem;color:#8B949E"></span>
+      <button class="parse-btn" id="parse-btn" onclick="triggerParse(this)">⚡ Parse Now</button>
+    </div>
   </div>
   <div class="dispatch-panel">
-    <div class="dispatch-head">
-      <div class="dispatch-title">
-        <h2>Operations</h2>
-      </div>
-      <div class="dh-right">
-        <span id="parse-status"></span>
-        <button class="parse-btn" id="parse-btn" onclick="triggerParse(this)">⚡ Parse Orders</button>
-      </div>
-    </div>
     <table class="itbl">
       <thead>
         <tr>
-          <th>Time</th><th>Type</th><th>People</th><th>Address</th><th>Name</th><th>Notes</th>
+          <th>Transcript</th>
+          <th># Police Officers Needed</th>
+          <th>People</th>
+          <th>Address</th>
         </tr>
       </thead>
       <tbody id="incidents-body">
-        <tr><td colspan="6" class="empty-cell">No incidents yet — hit ⚡ Parse Orders</td></tr>
+        <tr><td colspan="4" class="empty-cell">No reports yet — parsing runs automatically</td></tr>
       </tbody>
     </table>
   </div>
@@ -633,10 +631,12 @@
     }
   }
 
-  function typePill(type) {
-    const map = { Police: "tp-police", Medical: "tp-medical", Fire: "tp-fire" };
-    const cls = map[type] ?? "tp-unknown";
-    return `<span class="type-pill ${cls}">${esc(type ?? "Unknown")}</span>`;
+  async function silentParse() {
+    try {
+      const r = await fetch(`${BACKEND}/api/parse`, { method: "POST" });
+      const d = await r.json();
+      if (d.processed > 0) await loadIncidents();
+    } catch {}
   }
 
   async function loadIncidents() {
@@ -645,18 +645,18 @@
       const incidents = await res.json();
       const tbody = document.getElementById("incidents-body");
       if (!Array.isArray(incidents) || !incidents.length) {
-        tbody.innerHTML = '<tr><td colspan="6" class="empty-cell">No incidents yet — hit ⚡ Parse Orders</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" class="empty-cell">No reports yet — parsing runs automatically</td></tr>';
         return;
       }
-      tbody.innerHTML = incidents.map(i => `
-        <tr>
-          <td class="td-time">${timeAgo(i.created_at)}</td>
-          <td>${typePill(i.request_type)}</td>
-          <td class="td-cnt">${i.party_size ?? '—'}</td>
+      tbody.innerHTML = incidents.map(i => {
+        const snippet = esc((i.transcript ?? "").replace(/\n/g, " ").slice(0, 120)) + ((i.transcript ?? "").length > 120 ? "…" : "");
+        return `<tr>
+          <td class="td-notes" style="max-width:260px;white-space:normal;line-height:1.45;color:#8B949E" title="${esc(i.transcript ?? '')}">${snippet}</td>
+          <td style="color:#58A6FF;font-weight:700;text-align:center">${i.officers_needed ?? '—'}</td>
+          <td class="td-cnt" style="text-align:center">${i.party_size ?? '—'}</td>
           <td class="td-addr">${esc(i.address ?? '—')}</td>
-          <td style="color:#8B949E">${esc(i.caller_name ?? '—')}</td>
-          <td class="td-notes" title="${esc(i.notes ?? '')}">${esc(i.notes ?? '—')}</td>
-        </tr>`).join("");
+        </tr>`;
+      }).join("");
     } catch(e) { console.error(e); }
   }
 
@@ -714,8 +714,10 @@
   }
 
   renderCart();
+  silentParse();
   loadIncidents(); loadOrders(); loadLogs();
   setInterval(() => { loadIncidents(); loadOrders(); loadLogs(); }, 5000);
+  setInterval(silentParse, 60_000);
 </script>
 </body>
 </html>
