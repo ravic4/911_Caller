@@ -10,6 +10,7 @@ import uploadRouter from "./routes/upload.js";
 import ordersRouter from "./routes/orders.js";
 import logsRouter from "./routes/logs.js";
 import recordingsRouter from "./routes/recordings.js";
+import parseRouter from "./routes/parse.js";
 import { requestLogger } from "./services/logger.js";
 import { syncConversations } from "./services/sync.js";
 
@@ -29,6 +30,7 @@ app.use("/api/upload", uploadRouter);
 app.use("/api/orders", ordersRouter);
 app.use("/api/logs", logsRouter);
 app.use("/api/recordings", recordingsRouter);
+app.use("/api/parse", parseRouter);
 
 app.get("/health", (_req, res) => res.json({ ok: true, v: 2, routes: ["orders","agent","alert","upload"] }));
 

@@ -2,101 +2,602 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Slice & Co. — Pizza Order</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Slice & Co. — Artisan Pizza</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --red: #FF3D00;
+      --red-glow: rgba(255,61,0,0.35);
+      --dark: #0A0A0A;
+      --bg: #F9F5F2;
+      --slate: #0D1117;
+      --slate-2: #161B22;
+      --slate-3: #21262D;
+      --text-dim: #8B949E;
+      --text-inv: #E6EDF3;
+      --blue: #58A6FF;
+      --red-a: #F85149;
+      --orange: #F78166;
+      --gray: #6E7681;
+      --green: #3FB950;
+      --border: rgba(255,255,255,0.06);
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #fff8f2; font-family: 'Helvetica Neue', sans-serif; color: #1a1a1a; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); font-family: 'Inter', -apple-system, sans-serif; color: #111; -webkit-font-smoothing: antialiased; }
 
-    header { background: #e63000; color: white; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; }
-    header h1 { font-size: 1.6rem; font-weight: 900; letter-spacing: -1px; }
-    header span { font-size: 0.85rem; opacity: 0.85; }
+    /* ── HEADER ─────────────────────────────── */
+    header {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      height: 58px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px;
+    }
+    .logo {
+      font-size: 1.2rem; font-weight: 900; color: #fff;
+      letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;
+    }
+    .logo-pip { width: 7px; height: 7px; background: var(--red); border-radius: 50%; animation: blink 2s ease-in-out infinite; }
+    nav { display: flex; align-items: center; gap: 6px; }
+    nav a { color: #666; text-decoration: none; font-size: 0.82rem; font-weight: 500; padding: 6px 12px; border-radius: 8px; transition: color 0.15s, background 0.15s; }
+    nav a:hover { color: #fff; background: rgba(255,255,255,0.06); }
+    .nav-cta {
+      background: var(--red); color: #fff;
+      border: none; border-radius: 20px;
+      padding: 7px 18px; font-size: 0.8rem; font-weight: 700;
+      cursor: pointer; margin-left: 8px;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .nav-cta:hover { opacity: 0.9; transform: scale(1.02); }
 
-    .hero { background: #e63000; color: white; padding: 40px 32px 60px; text-align: center; }
-    .hero h2 { font-size: 2.4rem; font-weight: 900; }
-    .hero p { margin-top: 8px; opacity: 0.85; }
+    /* ── HERO ────────────────────────────────── */
+    .hero {
+      background: #0A0A0A;
+      color: #fff;
+      padding: 88px 28px 110px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -60%);
+      width: 600px; height: 400px;
+      background: radial-gradient(ellipse, rgba(255,61,0,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,61,0,0.1); border: 1px solid rgba(255,61,0,0.25);
+      color: #FF8A65; font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 20px; margin-bottom: 28px;
+    }
+    .hero-pill span { width: 5px; height: 5px; background: var(--red); border-radius: 50%; animation: blink 1.5s infinite; }
+    .hero h1 {
+      font-size: clamp(3.2rem, 8vw, 5.5rem);
+      font-weight: 900; letter-spacing: -3px; line-height: 0.95;
+      margin-bottom: 20px; position: relative;
+    }
+    .hero h1 em { color: var(--red); font-style: normal; }
+    .hero-sub {
+      font-size: 1rem; color: rgba(255,255,255,0.45);
+      max-width: 360px; margin: 0 auto 36px; line-height: 1.6;
+    }
+    .hero-btns { display: flex; gap: 10px; justify-content: center; position: relative; }
+    .btn-red {
+      background: var(--red); color: #fff; border: none; border-radius: 28px;
+      padding: 14px 30px; font-size: 0.95rem; font-weight: 800;
+      cursor: pointer; box-shadow: 0 0 32px var(--red-glow);
+      transition: all 0.15s;
+    }
+    .btn-red:hover { transform: translateY(-2px); box-shadow: 0 4px 40px var(--red-glow); }
+    .btn-ghost {
+      background: rgba(255,255,255,0.06); color: #fff;
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 28px;
+      padding: 14px 30px; font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); }
 
-    .menu { max-width: 700px; margin: -30px auto 0; padding: 0 16px 40px; }
-    .card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
-    .emoji { font-size: 3rem; }
-    .info { flex: 1; }
-    .info h3 { font-size: 1.1rem; font-weight: 700; }
-    .info p { font-size: 0.85rem; color: #666; margin-top: 4px; }
-    .price { font-weight: 800; font-size: 1.1rem; color: #e63000; margin-right: 8px; }
-    .order-btn { background: #e63000; color: white; border: none; border-radius: 24px; padding: 10px 20px; font-weight: 700; font-size: 0.9rem; cursor: pointer; }
+    /* ── MENU ────────────────────────────────── */
+    .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
 
-    .promo { background: #fff3cd; border: 2px dashed #e63000; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 16px; }
-    .promo p { font-size: 0.9rem; color: #555; margin-bottom: 12px; }
-    .promo-btn { background: #e63000; color: white; border: none; border-radius: 24px; padding: 12px 32px; font-weight: 800; font-size: 1rem; cursor: pointer; width: 100%; }
+    .menu-wrap {
+      max-width: 760px; margin: -48px auto 0; padding: 0 20px 52px;
+    }
 
-    .section { max-width: 700px; margin: 0 auto; padding: 0 16px 40px; }
-    .section h2 { font-size: 1.1rem; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: #e63000; animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .promo-bar {
+      background: linear-gradient(135deg, #111, #1a1a1a);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 18px; padding: 20px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.2);
+    }
+    .promo-bar-text h3 { color: #fff; font-size: 0.95rem; font-weight: 800; margin-bottom: 3px; }
+    .promo-bar-text p { color: #555; font-size: 0.8rem; }
+    .promo-bar-btn {
+      background: var(--red); color: #fff; border: none; border-radius: 20px;
+      padding: 10px 22px; font-weight: 800; font-size: 0.82rem; cursor: pointer;
+      white-space: nowrap; flex-shrink: 0;
+      box-shadow: 0 2px 16px var(--red-glow); transition: all 0.15s;
+    }
+    .promo-bar-btn:hover { transform: translateY(-1px); }
 
-    .order-item { background: white; border-radius: 12px; padding: 14px 18px; margin-bottom: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; justify-content: space-between; align-items: center; }
-    .order-item .msg { font-size: 0.9rem; flex: 1; }
-    .order-item .meta { font-size: 0.75rem; color: #999; margin-left: 12px; white-space: nowrap; }
-    .badge { background: #e63000; color: white; border-radius: 12px; padding: 3px 10px; font-size: 0.72rem; font-weight: 700; margin-left: 8px; }
+    .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .menu-card {
+      background: #fff; border-radius: 20px; padding: 22px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      display: flex; flex-direction: column; gap: 8px;
+      cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+      border: 1.5px solid transparent;
+    }
+    .menu-card:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(0,0,0,0.1); border-color: #ffe0d4; }
+    .mc-emoji { font-size: 2.6rem; }
+    .mc-name { font-size: 1rem; font-weight: 800; }
+    .mc-desc { font-size: 0.78rem; color: #888; line-height: 1.45; flex: 1; }
+    .mc-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 10px; }
+    .mc-price { font-size: 1.05rem; font-weight: 800; color: var(--red); }
+    .mc-add {
+      background: var(--red); color: #fff; border: none;
+      width: 30px; height: 30px; border-radius: 50%;
+      font-size: 1.1rem; font-weight: 700; cursor: pointer; display: flex;
+      align-items: center; justify-content: center; transition: transform 0.1s;
+    }
+    .mc-add:hover { transform: scale(1.12); }
 
-    /* Log viewer */
-    .log-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    .log-table th { background: #1a1a1a; color: white; padding: 10px 12px; text-align: left; }
-    .log-table td { padding: 8px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
-    .log-table tr:last-child td { border-bottom: none; }
-    .log-ok { color: #16a34a; font-weight: 700; }
-    .log-error { color: #e63000; font-weight: 700; }
-    .log-data { max-width: 300px; word-break: break-all; color: #555; font-family: monospace; font-size: 0.72rem; }
-    .empty { color: #aaa; font-size: 0.9rem; text-align: center; padding: 20px; }
+    /* ── SECTION HEADER ─────────────────────── */
+    .section-hd {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 14px;
+    }
+    .section-hd h2 { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.3px; }
+    .live-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.2);
+      color: var(--green); border-radius: 20px; padding: 3px 10px;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    }
+    .live-pip { width: 5px; height: 5px; background: var(--green); border-radius: 50%; animation: blink 1.5s infinite; }
 
-    #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1a1a1a; color: white; padding: 12px 24px; border-radius: 24px; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-    #toast.show { opacity: 1; }
+    /* ── DISPATCH PANEL ─────────────────────── */
+    .dispatch-section { padding: 0 20px 36px; max-width: 760px; margin: 0 auto; }
+
+    .dispatch-panel {
+      background: var(--slate);
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      box-shadow: 0 12px 64px rgba(0,0,0,0.35);
+      overflow: hidden;
+    }
+    .dispatch-head {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 100%);
+    }
+    .dispatch-title { display: flex; align-items: center; gap: 10px; }
+    .dispatch-title h2 {
+      color: var(--text-inv); font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+    }
+    .dh-right { display: flex; align-items: center; gap: 10px; }
+    #parse-status { font-size: 0.75rem; color: var(--text-dim); }
+    .parse-btn {
+      background: linear-gradient(135deg, var(--red) 0%, #FF6B35 100%);
+      color: #fff; border: none; border-radius: 20px;
+      padding: 7px 16px; font-size: 0.78rem; font-weight: 700;
+      cursor: pointer; box-shadow: 0 2px 14px rgba(255,61,0,0.3);
+      transition: all 0.15s; letter-spacing: 0.3px;
+    }
+    .parse-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(255,61,0,0.45); }
+    .parse-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .itbl { width: 100%; border-collapse: collapse; }
+    .itbl th {
+      padding: 9px 16px; text-align: left;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--text-dim); border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.015);
+    }
+    .itbl td {
+      padding: 13px 16px; border-bottom: 1px solid rgba(255,255,255,0.035);
+      font-size: 0.83rem; color: var(--text-inv); vertical-align: middle;
+    }
+    .itbl tr:last-child td { border-bottom: none; }
+    .itbl tbody tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .type-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 0.7rem; font-weight: 800; letter-spacing: 0.4px; text-transform: uppercase; white-space: nowrap;
+    }
+    .type-pill::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+    .tp-police  { background: rgba(88,166,255,0.12); color: #58A6FF; border: 1px solid rgba(88,166,255,0.2); }
+    .tp-medical { background: rgba(248,81,73,0.12);  color: #F85149; border: 1px solid rgba(248,81,73,0.2); }
+    .tp-fire    { background: rgba(247,129,102,0.12);color: #F78166; border: 1px solid rgba(247,129,102,0.2); }
+    .tp-unknown { background: rgba(110,118,129,0.12);color: #8B949E; border: 1px solid rgba(110,118,129,0.2); }
+
+    .td-addr  { color: #8B949E; font-size: 0.8rem; }
+    .td-notes { color: #6E7681; font-size: 0.77rem; max-width: 190px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .td-time  { color: #484F58; font-size: 0.75rem; white-space: nowrap; }
+    .td-cnt   { color: #8B949E; text-align: center; }
+    .empty-cell { text-align: center; color: #30363D; padding: 36px; font-size: 0.83rem; }
+
+    /* ── LIVE ORDERS ─────────────────────────── */
+    .orders-section { padding: 0 20px 36px; max-width: 760px; margin: 0 auto; }
+    .order-card {
+      background: #fff; border-radius: 16px;
+      padding: 16px 20px; margin-bottom: 10px;
+      box-shadow: 0 1px 10px rgba(0,0,0,0.05);
+      display: flex; gap: 14px; align-items: flex-start;
+      border-left: 3px solid var(--red);
+      transition: box-shadow 0.15s;
+    }
+    .order-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.09); }
+    .oc-icon { font-size: 1.5rem; flex-shrink: 0; padding-top: 1px; }
+    .oc-body { flex: 1; min-width: 0; }
+    .oc-msg {
+      font-size: 0.83rem; line-height: 1.5; color: #333;
+      display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .oc-meta { display: flex; gap: 8px; align-items: center; margin-top: 7px; }
+    .oc-time { font-size: 0.72rem; color: #bbb; }
+    .oc-badge { background: #f3f3f3; color: #666; border-radius: 10px; padding: 2px 8px; font-size: 0.67rem; font-weight: 700; text-transform: uppercase; }
+
+    /* ── LOG PANEL ───────────────────────────── */
+    .log-section { padding: 0 20px 64px; max-width: 760px; margin: 0 auto; }
+    .log-panel {
+      background: var(--slate); border-radius: 20px;
+      border: 1px solid var(--border); overflow: hidden;
+    }
+    .log-panel-head {
+      padding: 13px 18px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .log-panel-head h2 { font-size: 0.75rem; font-weight: 700; color: #484F58; letter-spacing: 1px; text-transform: uppercase; }
+    .log-tbl { width: 100%; border-collapse: collapse; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.74rem; }
+    .log-tbl th { padding: 8px 14px; text-align: left; color: #30363D; border-bottom: 1px solid var(--border); }
+    .log-tbl td { padding: 8px 14px; border-bottom: 1px solid rgba(255,255,255,0.028); color: #6E7681; vertical-align: top; }
+    .log-tbl tr:last-child td { border-bottom: none; }
+    .log-ok  { color: var(--green) !important; font-weight: 700; }
+    .log-err { color: var(--red-a) !important; font-weight: 700; }
+    .log-data { max-width: 280px; word-break: break-all; color: #484F58; }
+
+    /* ── FOOTER ──────────────────────────────── */
+    footer { background: #050505; color: #2a2a2a; text-align: center; padding: 20px; font-size: 0.75rem; }
+
+    /* ── TOAST ───────────────────────────────── */
+    #toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(8px);
+      background: rgba(14,14,14,0.95); color: #fff;
+      padding: 11px 22px; border-radius: 24px; font-size: 0.87rem; font-weight: 600;
+      opacity: 0; transition: opacity 0.25s, transform 0.25s; pointer-events: none;
+      box-shadow: 0 4px 28px rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+    /* ── CART ────────────────────────────────── */
+    .cart-btn {
+      position: relative; background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 20px;
+      color: #fff; padding: 7px 16px; font-size: 0.8rem; font-weight: 600;
+      cursor: pointer; transition: background 0.15s; margin-left: 6px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .cart-btn:hover { background: rgba(255,255,255,0.14); }
+    .cart-badge {
+      display: none; align-items: center; justify-content: center;
+      background: var(--red); color: #fff; border-radius: 50%;
+      width: 18px; height: 18px; font-size: 0.65rem; font-weight: 800;
+    }
+    .cart-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55); z-index: 400; backdrop-filter: blur(2px);
+    }
+    .cart-panel {
+      position: fixed; top: 0; right: -420px; bottom: 0; width: 400px;
+      background: #0f0f0f; z-index: 500; display: flex; flex-direction: column;
+      border-left: 1px solid rgba(255,255,255,0.07);
+      transition: right 0.3s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: -8px 0 48px rgba(0,0,0,0.5);
+    }
+    .cart-panel.open { right: 0; }
+    .cart-head {
+      padding: 20px 22px; border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .cart-head h2 { color: #fff; font-size: 1rem; font-weight: 800; }
+    .cart-close {
+      background: rgba(255,255,255,0.07); border: none; color: #888;
+      width: 30px; height: 30px; border-radius: 50%; font-size: 1.1rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+    .cart-close:hover { background: rgba(255,255,255,0.12); color: #fff; }
+    .cart-items { flex: 1; overflow-y: auto; padding: 16px 22px; }
+    .cart-empty { color: #444; font-size: 0.88rem; text-align: center; padding: 48px 0; }
+    .cart-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+      gap: 12px;
+    }
+    .cart-item:last-child { border-bottom: none; }
+    .ci-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+    .ci-emoji { font-size: 1.8rem; flex-shrink: 0; }
+    .ci-name { color: #e0e0e0; font-size: 0.88rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ci-unit { color: #555; font-size: 0.75rem; margin-top: 2px; }
+    .ci-qty-wrap { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .ci-btn {
+      background: rgba(255,255,255,0.07); border: none; color: #aaa;
+      width: 26px; height: 26px; border-radius: 8px; font-size: 1rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.1s;
+    }
+    .ci-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
+    .ci-count { color: #fff; font-size: 0.88rem; font-weight: 700; min-width: 16px; text-align: center; }
+    .ci-price { color: var(--red); font-size: 0.85rem; font-weight: 700; min-width: 52px; text-align: right; }
+    .cart-foot { padding: 20px 22px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .cart-totals { margin-bottom: 16px; }
+    .cart-row { display: flex; justify-content: space-between; font-size: 0.83rem; color: #555; margin-bottom: 6px; }
+    .cart-row.total { color: #fff; font-weight: 800; font-size: 1rem; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.07); }
+    .checkout-btn {
+      width: 100%; background: var(--red); color: #fff; border: none; border-radius: 14px;
+      padding: 15px; font-size: 0.95rem; font-weight: 800; cursor: pointer;
+      box-shadow: 0 4px 24px var(--red-glow); transition: all 0.15s;
+    }
+    .checkout-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 32px var(--red-glow); }
+    .checkout-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
   </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <header>
-  <h1>🍕 Slice & Co.</h1>
-  <span>📍 Delivering to you</span>
+  <div class="logo"><div class="logo-pip"></div>Slice & Co.</div>
+  <nav>
+    <a href="#">Menu</a>
+    <a href="#">Deals</a>
+    <a href="#">Track</a>
+    <button class="nav-cta" onclick="sendAlert(this)">Order Now</button>
+    <button class="cart-btn" onclick="toggleCart()">
+      🛒 Cart <span class="cart-badge" id="cart-badge">0</span>
+    </button>
+  </nav>
 </header>
 
+<!-- HERO -->
 <div class="hero">
-  <h2>Hot. Fresh. Fast.</h2>
-  <p>Order in under 60 seconds.</p>
-</div>
-
-<div class="menu">
-  <div class="promo">
-    <p>🎉 <strong>Today's deal:</strong> Free garlic bread with any order over $20!</p>
-    <button class="promo-btn" onclick="sendAlert(this)">Claim Free Garlic Bread</button>
+  <div class="hero-glow"></div>
+  <div class="hero-pill"><span></span>Now Delivering Citywide</div>
+  <h1>Hot.<br><em>Fresh.</em><br>Fast.</h1>
+  <p class="hero-sub">Artisan pizza made from scratch, delivered to your door in 30 minutes or less.</p>
+  <div class="hero-btns">
+    <button class="btn-red">Order Now</button>
+    <button class="btn-ghost">View Menu</button>
   </div>
-  <div class="card"><div class="emoji">🍕</div><div class="info"><h3>Margherita Classic</h3><p>San Marzano tomato, fresh mozzarella, basil</p></div><span class="price">$14.99</span><button class="order-btn">Add</button></div>
-  <div class="card"><div class="emoji">🍖</div><div class="info"><h3>Meat Lover's</h3><p>Pepperoni, sausage, bacon, ham</p></div><span class="price">$17.99</span><button class="order-btn">Add</button></div>
-  <div class="card"><div class="emoji">🌶️</div><div class="info"><h3>Spicy Diavola</h3><p>Nduja, chili flakes, roasted peppers</p></div><span class="price">$16.99</span><button class="order-btn">Add</button></div>
-  <div class="card"><div class="emoji">🥗</div><div class="info"><h3>Garden Fresh</h3><p>Roasted veg, goat cheese, arugula</p></div><span class="price">$15.49</span><button class="order-btn">Add</button></div>
 </div>
 
-<!-- Live orders -->
-<div class="section">
-  <h2><span class="dot"></span> Live Orders</h2>
-  <div id="orders-list"><p class="empty">No orders yet...</p></div>
+<!-- MENU + PROMO -->
+<div class="menu-wrap">
+  <div class="promo-bar">
+    <div class="promo-bar-text">
+      <h3>🎉 Today's Special Drop</h3>
+      <p>Free garlic bread with any order over $20 — claim before midnight</p>
+    </div>
+    <button class="promo-bar-btn" onclick="sendAlert(this)">Claim Free Bread</button>
+  </div>
+  <div class="menu-grid">
+    <div class="menu-card">
+      <div class="mc-emoji">🍕</div>
+      <div class="mc-name">Margherita Classic</div>
+      <div class="mc-desc">San Marzano tomato, fresh mozzarella, hand-torn basil</div>
+      <div class="mc-footer"><span class="mc-price">$14.99</span><button class="mc-add" onclick="addToCart('Margherita Classic',14.99,'🍕')">+</button></div>
+    </div>
+    <div class="menu-card">
+      <div class="mc-emoji">🍖</div>
+      <div class="mc-name">Meat Lover's</div>
+      <div class="mc-desc">Pepperoni, Italian sausage, smoked bacon, honey ham</div>
+      <div class="mc-footer"><span class="mc-price">$17.99</span><button class="mc-add" onclick="addToCart('Meat Lover\'s',17.99,'🍖')">+</button></div>
+    </div>
+    <div class="menu-card">
+      <div class="mc-emoji">🌶️</div>
+      <div class="mc-name">Spicy Diavola</div>
+      <div class="mc-desc">Nduja, Calabrian chili flakes, roasted red peppers</div>
+      <div class="mc-footer"><span class="mc-price">$16.99</span><button class="mc-add" onclick="addToCart('Spicy Diavola',16.99,'🌶️')">+</button></div>
+    </div>
+    <div class="menu-card">
+      <div class="mc-emoji">🥗</div>
+      <div class="mc-name">Garden Fresh</div>
+      <div class="mc-desc">Roasted seasonal veg, whipped goat cheese, wild arugula</div>
+      <div class="mc-footer"><span class="mc-price">$15.49</span><button class="mc-add" onclick="addToCart('Garden Fresh',15.49,'🥗')">+</button></div>
+    </div>
+  </div>
 </div>
 
-<!-- System log viewer -->
-<div class="section">
-  <h2><span class="dot"></span> System Log <span style="font-size:0.75rem;font-weight:400;color:#999">(every request hitting the backend)</span></h2>
-  <table class="log-table">
-    <thead><tr><th>Time</th><th>Event</th><th>Status</th><th>Data</th></tr></thead>
-    <tbody id="log-body"><tr><td colspan="4" class="empty">No logs yet...</td></tr></tbody>
-  </table>
+<!-- DISPATCH QUEUE -->
+<div class="dispatch-section">
+  <div class="section-hd">
+    <div class="live-chip"><div class="live-pip"></div>Live</div>
+    <h2>Dispatch Queue</h2>
+  </div>
+  <div class="dispatch-panel">
+    <div class="dispatch-head">
+      <div class="dispatch-title">
+        <h2>Operations</h2>
+      </div>
+      <div class="dh-right">
+        <span id="parse-status"></span>
+        <button class="parse-btn" id="parse-btn" onclick="triggerParse(this)">⚡ Parse Orders</button>
+      </div>
+    </div>
+    <table class="itbl">
+      <thead>
+        <tr>
+          <th>Time</th><th>Type</th><th>People</th><th>Address</th><th>Name</th><th>Notes</th>
+        </tr>
+      </thead>
+      <tbody id="incidents-body">
+        <tr><td colspan="6" class="empty-cell">No incidents yet — hit ⚡ Parse Orders</td></tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
+<!-- LIVE ORDERS -->
+<div class="orders-section">
+  <div class="section-hd">
+    <div class="live-chip" style="background:rgba(255,61,0,0.08);border-color:rgba(255,61,0,0.2);color:var(--red)">
+      <div class="live-pip" style="background:var(--red)"></div>Live
+    </div>
+    <h2>Recent Orders</h2>
+  </div>
+  <div id="orders-list"><p style="color:#bbb;font-size:0.85rem;padding:8px 0">No orders yet...</p></div>
+</div>
+
+<!-- SYSTEM LOG -->
+<div class="log-section">
+  <div class="section-hd">
+    <h2 style="color:#555;font-size:0.85rem">System Log</h2>
+  </div>
+  <div class="log-panel">
+    <div class="log-panel-head">
+      <div class="live-pip"></div>
+      <h2>Every request hitting the backend</h2>
+    </div>
+    <table class="log-tbl">
+      <thead><tr><th>Time</th><th>Event</th><th>Status</th><th>Data</th></tr></thead>
+      <tbody id="log-body"><tr><td colspan="4" style="text-align:center;color:#21262D;padding:28px">No logs yet...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CART PANEL -->
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div class="cart-panel" id="cart-panel">
+  <div class="cart-head">
+    <h2>Your Order</h2>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <p class="cart-empty">Your cart is empty</p>
+  </div>
+  <div class="cart-foot">
+    <div class="cart-totals">
+      <div class="cart-row"><span>Subtotal</span><span id="cart-subtotal">$0.00</span></div>
+      <div class="cart-row"><span>Delivery</span><span>Free</span></div>
+      <div class="cart-row total"><span>Total</span><span id="cart-total">$0.00</span></div>
+    </div>
+    <button class="checkout-btn" id="checkout-btn" onclick="placeOrder(this)" disabled>Place Order</button>
+  </div>
+</div>
+
+<footer>© 2026 Slice & Co. All rights reserved.</footer>
 <div id="toast"></div>
 
 <script>
   const BACKEND = "https://911caller-production.up.railway.app";
 
+  // ── CART STATE ─────────────────────────────
+  const cart = {};
+
+  function addToCart(name, price, emoji) {
+    if (cart[name]) { cart[name].qty++; }
+    else { cart[name] = { name, price, emoji, qty: 1 }; }
+    renderCart();
+    showToast(`${emoji} Added to order!`);
+  }
+
+  function changeQty(name, delta) {
+    if (!cart[name]) return;
+    cart[name].qty += delta;
+    if (cart[name].qty <= 0) delete cart[name];
+    renderCart();
+  }
+
+  function renderCart() {
+    const items = Object.values(cart);
+    const total = items.reduce((s, i) => s + i.price * i.qty, 0);
+
+    // badge
+    const count = items.reduce((s, i) => s + i.qty, 0);
+    const badge = document.getElementById("cart-badge");
+    badge.textContent = count;
+    badge.style.display = count > 0 ? "flex" : "none";
+
+    // totals
+    document.getElementById("cart-subtotal").textContent = `$${total.toFixed(2)}`;
+    document.getElementById("cart-total").textContent    = `$${total.toFixed(2)}`;
+    document.getElementById("checkout-btn").disabled     = items.length === 0;
+
+    // items
+    const el = document.getElementById("cart-items");
+    if (!items.length) {
+      el.innerHTML = '<p class="cart-empty">Your cart is empty</p>';
+      return;
+    }
+    el.innerHTML = items.map(i => `
+      <div class="cart-item">
+        <div class="ci-left">
+          <span class="ci-emoji">${i.emoji}</span>
+          <div>
+            <div class="ci-name">${esc(i.name)}</div>
+            <div class="ci-unit">$${i.price.toFixed(2)} each</div>
+          </div>
+        </div>
+        <div class="ci-qty-wrap">
+          <button class="ci-btn" onclick="changeQty('${i.name}', -1)">−</button>
+          <span class="ci-count">${i.qty}</span>
+          <button class="ci-btn" onclick="changeQty('${i.name}', 1)">+</button>
+        </div>
+        <span class="ci-price">$${(i.price * i.qty).toFixed(2)}</span>
+      </div>`).join("");
+  }
+
+  function toggleCart() {
+    const panel   = document.getElementById("cart-panel");
+    const overlay = document.getElementById("cart-overlay");
+    const opening = !panel.classList.contains("open");
+    panel.classList.toggle("open");
+    overlay.style.display = opening ? "block" : "none";
+  }
+
+  async function placeOrder(btn) {
+    const items  = Object.values(cart);
+    if (!items.length) return;
+    const summary = items.map(i => `${i.qty}x ${i.name}`).join(", ");
+    const orig = btn.textContent;
+    btn.textContent = "Placing order...";
+    btn.disabled = true;
+    try {
+      await fetch(`${BACKEND}/api/alert/silent`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: `Order placed: ${summary}` }),
+      });
+      btn.textContent = "✓ Order Placed!";
+      showToast("Order confirmed! 🍕");
+      setTimeout(() => toggleCart(), 1500);
+    } catch {
+      btn.textContent = orig;
+      btn.disabled = false;
+    }
+  }
+
+  // ── ALERT ──────────────────────────────────
   async function sendAlert(btn) {
-    btn.textContent = "Claiming...";
+    const orig = btn.textContent;
+    btn.textContent = "Sending...";
     btn.disabled = true;
     try {
       await fetch(`${BACKEND}/api/alert/silent`, {
@@ -104,12 +605,59 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: "Emergency alert triggered." }),
       });
-      btn.textContent = "✓ Claimed!";
-      showToast("Order placed! 🧄");
-    } catch (e) {
-      btn.textContent = "Try again";
-      btn.disabled = false;
+      btn.textContent = "✓ Sent!";
+      showToast("Alert sent 🚨");
+      setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 3000);
+    } catch {
+      btn.textContent = orig; btn.disabled = false;
     }
+  }
+
+  async function triggerParse(btn) {
+    btn.disabled = true;
+    btn.textContent = "Parsing...";
+    const status = document.getElementById("parse-status");
+    try {
+      const res = await fetch(`${BACKEND}/api/parse`, { method: "POST" });
+      const data = await res.json();
+      status.textContent = `${data.processed} processed`;
+      await loadIncidents();
+      showToast(`Parsed ${data.processed} order(s) ✓`);
+    } catch(e) {
+      status.textContent = "Error";
+      showToast("Parse failed: " + e.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "⚡ Parse Orders";
+      setTimeout(() => { status.textContent = ""; }, 5000);
+    }
+  }
+
+  function typePill(type) {
+    const map = { Police: "tp-police", Medical: "tp-medical", Fire: "tp-fire" };
+    const cls = map[type] ?? "tp-unknown";
+    return `<span class="type-pill ${cls}">${esc(type ?? "Unknown")}</span>`;
+  }
+
+  async function loadIncidents() {
+    try {
+      const res = await fetch(`${BACKEND}/api/parse/incidents`);
+      const incidents = await res.json();
+      const tbody = document.getElementById("incidents-body");
+      if (!Array.isArray(incidents) || !incidents.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-cell">No incidents yet — hit ⚡ Parse Orders</td></tr>';
+        return;
+      }
+      tbody.innerHTML = incidents.map(i => `
+        <tr>
+          <td class="td-time">${timeAgo(i.created_at)}</td>
+          <td>${typePill(i.request_type)}</td>
+          <td class="td-cnt">${i.party_size ?? '—'}</td>
+          <td class="td-addr">${esc(i.address ?? '—')}</td>
+          <td style="color:#8B949E">${esc(i.caller_name ?? '—')}</td>
+          <td class="td-notes" title="${esc(i.notes ?? '')}">${esc(i.notes ?? '—')}</td>
+        </tr>`).join("");
+    } catch(e) { console.error(e); }
   }
 
   async function loadOrders() {
@@ -117,12 +665,20 @@
       const res = await fetch(`${BACKEND}/api/orders`);
       const orders = await res.json();
       const el = document.getElementById("orders-list");
-      if (!Array.isArray(orders) || !orders.length) { el.innerHTML = '<p class="empty">No orders yet...</p>'; return; }
-      el.innerHTML = orders.map(o => `
-        <div class="order-item">
-          <span class="msg">${esc(o.message)}</span>
-          <span class="meta">${timeAgo(o.created_at)}</span>
-          <span class="badge">${esc(o.status)}</span>
+      if (!Array.isArray(orders) || !orders.length) {
+        el.innerHTML = '<p style="color:#bbb;font-size:0.85rem;padding:8px 0">No orders yet...</p>';
+        return;
+      }
+      el.innerHTML = orders.slice(0, 5).map(o => `
+        <div class="order-card">
+          <div class="oc-icon">🍕</div>
+          <div class="oc-body">
+            <div class="oc-msg">${esc(o.message)}</div>
+            <div class="oc-meta">
+              <span class="oc-time">${timeAgo(o.created_at)}</span>
+              <span class="oc-badge">${esc(o.status)}</span>
+            </div>
+          </div>
         </div>`).join("");
     } catch(e) { console.error(e); }
   }
@@ -132,25 +688,34 @@
       const res = await fetch(`${BACKEND}/api/logs`);
       const logs = await res.json();
       const tbody = document.getElementById("log-body");
-      if (!Array.isArray(logs) || !logs.length) { tbody.innerHTML = '<tr><td colspan="4" class="empty">No logs yet...</td></tr>'; return; }
+      if (!Array.isArray(logs) || !logs.length) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#21262D;padding:28px">No logs yet...</td></tr>';
+        return;
+      }
       tbody.innerHTML = logs.map(l => `
         <tr>
-          <td style="white-space:nowrap">${new Date(l.created_at).toLocaleTimeString()}</td>
-          <td>${esc(l.event)}</td>
-          <td class="${l.status === 'ok' ? 'log-ok' : 'log-error'}">${esc(l.status)}</td>
+          <td style="white-space:nowrap;color:#484F58">${new Date(l.created_at).toLocaleTimeString()}</td>
+          <td style="color:#6E7681">${esc(l.event)}</td>
+          <td class="${l.status === 'ok' ? 'log-ok' : 'log-err'}">${esc(l.status)}</td>
           <td class="log-data">${esc(JSON.stringify(l.data))}</td>
         </tr>`).join("");
     } catch(e) { console.error(e); }
   }
 
   function esc(s) { return String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-  function timeAgo(iso) { const s = Math.floor((Date.now()-new Date(iso))/1000); return s<60?`${s}s ago`:s<3600?`${Math.floor(s/60)}m ago`:`${Math.floor(s/3600)}h ago`; }
-  function showToast(msg) { const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),3000); }
+  function timeAgo(iso) {
+    const s = Math.floor((Date.now() - new Date(iso)) / 1000);
+    return s < 60 ? `${s}s ago` : s < 3600 ? `${Math.floor(s/60)}m ago` : `${Math.floor(s/3600)}h ago`;
+  }
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg; t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 3000);
+  }
 
-  document.querySelectorAll(".order-btn").forEach(b => b.addEventListener("click", () => showToast("Added to cart!")));
-
-  loadOrders(); loadLogs();
-  setInterval(() => { loadOrders(); loadLogs(); }, 5000);
+  renderCart();
+  loadIncidents(); loadOrders(); loadLogs();
+  setInterval(() => { loadIncidents(); loadOrders(); loadLogs(); }, 5000);
 </script>
 </body>
 </html>

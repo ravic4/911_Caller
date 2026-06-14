@@ -1,6 +1,8 @@
 // Polls ElevenLabs for new conversations and saves them to Supabase automatically.
 // Runs every 60 seconds — no webhooks or tool calls needed.
 
+import { parseNewOrders } from "./parse.js";
+
 const AGENT_ID = process.env.ELEVENLABS_AGENT_ID;
 const API_KEY  = process.env.ELEVENLABS_API_KEY;
 const SUPA_URL = () => `${process.env.SUPABASE_URL}/rest/v1`;
@@ -63,13 +65,15 @@ async function saveConversation(conv, detail) {
 export async function syncConversations() {
   try {
     const conversations = await getRecentConversations();
+    let newCount = 0;
     for (const conv of conversations) {
       if (conv.status !== "done") continue;
       if (await alreadySaved(conv.conversation_id)) continue;
 
       const detail = await getConversationDetail(conv.conversation_id);
-      if (detail) await saveConversation(conv, detail);
+      if (detail) { await saveConversation(conv, detail); newCount++; }
     }
+    if (newCount > 0) await parseNewOrders();
   } catch (e) {
     console.error("[Sync] Error:", e.message);
   }
