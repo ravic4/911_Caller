@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Slice & Co. — Pizza Order</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #fff8f2; font-family: 'Helvetica Neue', sans-serif; color: #1a1a1a; }
+
+    header { background: #e63000; color: white; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; }
+    header h1 { font-size: 1.6rem; font-weight: 900; letter-spacing: -1px; }
+    header span { font-size: 0.85rem; opacity: 0.85; }
+
+    .hero { background: #e63000; color: white; padding: 40px 32px 60px; text-align: center; }
+    .hero h2 { font-size: 2.4rem; font-weight: 900; }
+    .hero p { margin-top: 8px; opacity: 0.85; }
+
+    .menu { max-width: 700px; margin: -30px auto 0; padding: 0 16px 60px; }
+    .card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    .emoji { font-size: 3rem; }
+    .info { flex: 1; }
+    .info h3 { font-size: 1.1rem; font-weight: 700; }
+    .info p { font-size: 0.85rem; color: #666; margin-top: 4px; }
+    .price { font-weight: 800; font-size: 1.1rem; color: #e63000; margin-right: 8px; }
+
+    .order-btn { background: #e63000; color: white; border: none; border-radius: 24px; padding: 10px 20px; font-weight: 700; font-size: 0.9rem; cursor: pointer; }
+    .order-btn:active { background: #b32400; }
+
+    /* The "special" button — looks like a promo */
+    .promo { background: #fff3cd; border: 2px dashed #e63000; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 16px; }
+    .promo p { font-size: 0.9rem; color: #555; margin-bottom: 12px; }
+    .promo-btn { background: #e63000; color: white; border: none; border-radius: 24px; padding: 12px 32px; font-weight: 800; font-size: 1rem; cursor: pointer; width: 100%; }
+    .promo-btn:active { background: #b32400; }
+
+    #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1a1a1a; color: white; padding: 12px 24px; border-radius: 24px; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    #toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🍕 Slice & Co.</h1>
+  <span>📍 Delivering to you</span>
+</header>
+
+<div class="hero">
+  <h2>Hot. Fresh. Fast.</h2>
+  <p>Order in under 60 seconds.</p>
+</div>
+
+<div class="menu">
+
+  <!-- Fake promo that secretly sends the alert -->
+  <div class="promo">
+    <p>🎉 <strong>Today's deal:</strong> Free garlic bread with any order over $20!</p>
+    <button class="promo-btn" onclick="sendAlert(this)">Claim Free Garlic Bread</button>
+  </div>
+
+  <div class="card">
+    <div class="emoji">🍕</div>
+    <div class="info">
+      <h3>Margherita Classic</h3>
+      <p>San Marzano tomato, fresh mozzarella, basil</p>
+    </div>
+    <span class="price">$14.99</span>
+    <button class="order-btn">Add</button>
+  </div>
+
+  <div class="card">
+    <div class="emoji">🍖</div>
+    <div class="info">
+      <h3>Meat Lover's</h3>
+      <p>Pepperoni, sausage, bacon, ham</p>
+    </div>
+    <span class="price">$17.99</span>
+    <button class="order-btn">Add</button>
+  </div>
+
+  <div class="card">
+    <div class="emoji">🌶️</div>
+    <div class="info">
+      <h3>Spicy Diavola</h3>
+      <p>Nduja, chili flakes, roasted peppers</p>
+    </div>
+    <span class="price">$16.99</span>
+    <button class="order-btn">Add</button>
+  </div>
+
+  <div class="card">
+    <div class="emoji">🥗</div>
+    <div class="info">
+      <h3>Garden Fresh</h3>
+      <p>Roasted veg, goat cheese, arugula</p>
+    </div>
+    <span class="price">$15.49</span>
+    <button class="order-btn">Add</button>
+  </div>
+
+</div>
+
+<div id="toast">Order placed!</div>
+
+<script>
+  async function sendAlert(btn) {
+    btn.textContent = "Claiming...";
+    btn.disabled = true;
+    try {
+      const res = await fetch("https://911caller-production.up.railway.app/api/alert/silent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: "I need help. This is an automated emergency alert." }),
+      });
+      const data = await res.json();
+      btn.textContent = "✓ Claimed!";
+      showToast("Order placed! Garlic bread on its way 🧄");
+      console.log("Alert result:", data);
+    } catch (e) {
+      btn.textContent = "Try again";
+      btn.disabled = false;
+      showToast("Could not connect to server");
+      console.error(e);
+    }
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 3000);
+  }
+
+  // Regular "Add" buttons — just show a toast so it feels real
+  document.querySelectorAll(".order-btn").forEach(btn => {
+    btn.addEventListener("click", () => showToast("Added to cart!"));
+  });
+</script>
+
+</body>
+</html>
