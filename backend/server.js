@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import agentRouter from "./routes/agent.js";
 import alertRouter from "./routes/alert.js";
 import uploadRouter from "./routes/upload.js";
+import ordersRouter from "./routes/orders.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -20,6 +21,7 @@ app.use("/uploads", express.static(join(__dirname, "uploads")));
 app.use("/api/agent", agentRouter);
 app.use("/api/alert", alertRouter);
 app.use("/api/upload", uploadRouter);
+app.use("/api/orders", ordersRouter);
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
