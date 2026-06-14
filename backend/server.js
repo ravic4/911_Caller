@@ -11,6 +11,7 @@ import ordersRouter from "./routes/orders.js";
 import logsRouter from "./routes/logs.js";
 import recordingsRouter from "./routes/recordings.js";
 import { requestLogger } from "./services/logger.js";
+import { syncConversations } from "./services/sync.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -32,4 +33,8 @@ app.use("/api/recordings", recordingsRouter);
 app.get("/health", (_req, res) => res.json({ ok: true, v: 2, routes: ["orders","agent","alert","upload"] }));
 
 const PORT = process.env.PORT ?? 3001;
-app.listen(PORT, () => console.log(`Safe911 backend running on :${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Safe911 backend running on :${PORT}`);
+  syncConversations();
+  setInterval(syncConversations, 60_000);
+});
