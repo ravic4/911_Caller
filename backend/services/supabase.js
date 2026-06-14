@@ -1,28 +1,28 @@
-import { createClient } from "@supabase/supabase-js";
-
-function getClient() {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_KEY;
-  if (!url || !key) throw new Error("SUPABASE_URL and SUPABASE_SERVICE_KEY must be set");
-  return createClient(url, key, { realtime: { enabled: false } });
-}
+const BASE = () => `${process.env.SUPABASE_URL}/rest/v1`;
+const HEADERS = () => ({
+  apikey: process.env.SUPABASE_SERVICE_KEY,
+  Authorization: `Bearer ${process.env.SUPABASE_SERVICE_KEY}`,
+  "Content-Type": "application/json",
+  Prefer: "return=representation",
+});
 
 export async function saveOrder({ caller, message }) {
-  const { data, error } = await getClient()
-    .from("orders")
-    .insert({ caller, message })
-    .select()
-    .single();
-  if (error) throw new Error(error.message);
-  return data;
+  const res = await fetch(`${BASE()}/orders`, {
+    method: "POST",
+    headers: HEADERS(),
+    body: JSON.stringify({ caller, message }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message ?? JSON.stringify(data));
+  return Array.isArray(data) ? data[0] : data;
 }
 
 export async function getOrders() {
-  const { data, error } = await getClient()
-    .from("orders")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(50);
-  if (error) throw new Error(error.message);
+  const res = await fetch(
+    `${BASE()}/orders?select=*&order=created_at.desc&limit=50`,
+    { headers: HEADERS() }
+  );
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message ?? JSON.stringify(data));
   return data;
 }
