@@ -15,22 +15,38 @@
     .hero h2 { font-size: 2.4rem; font-weight: 900; }
     .hero p { margin-top: 8px; opacity: 0.85; }
 
-    .menu { max-width: 700px; margin: -30px auto 0; padding: 0 16px 60px; }
+    .menu { max-width: 700px; margin: -30px auto 0; padding: 0 16px 40px; }
     .card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
     .emoji { font-size: 3rem; }
     .info { flex: 1; }
     .info h3 { font-size: 1.1rem; font-weight: 700; }
     .info p { font-size: 0.85rem; color: #666; margin-top: 4px; }
     .price { font-weight: 800; font-size: 1.1rem; color: #e63000; margin-right: 8px; }
-
     .order-btn { background: #e63000; color: white; border: none; border-radius: 24px; padding: 10px 20px; font-weight: 700; font-size: 0.9rem; cursor: pointer; }
-    .order-btn:active { background: #b32400; }
 
-    /* The "special" button — looks like a promo */
     .promo { background: #fff3cd; border: 2px dashed #e63000; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 16px; }
     .promo p { font-size: 0.9rem; color: #555; margin-bottom: 12px; }
     .promo-btn { background: #e63000; color: white; border: none; border-radius: 24px; padding: 12px 32px; font-weight: 800; font-size: 1rem; cursor: pointer; width: 100%; }
-    .promo-btn:active { background: #b32400; }
+
+    .section { max-width: 700px; margin: 0 auto; padding: 0 16px 40px; }
+    .section h2 { font-size: 1.1rem; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #e63000; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    .order-item { background: white; border-radius: 12px; padding: 14px 18px; margin-bottom: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; justify-content: space-between; align-items: center; }
+    .order-item .msg { font-size: 0.9rem; flex: 1; }
+    .order-item .meta { font-size: 0.75rem; color: #999; margin-left: 12px; white-space: nowrap; }
+    .badge { background: #e63000; color: white; border-radius: 12px; padding: 3px 10px; font-size: 0.72rem; font-weight: 700; margin-left: 8px; }
+
+    /* Log viewer */
+    .log-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .log-table th { background: #1a1a1a; color: white; padding: 10px 12px; text-align: left; }
+    .log-table td { padding: 8px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+    .log-table tr:last-child td { border-bottom: none; }
+    .log-ok { color: #16a34a; font-weight: 700; }
+    .log-error { color: #e63000; font-weight: 700; }
+    .log-data { max-width: 300px; word-break: break-all; color: #555; font-family: monospace; font-size: 0.72rem; }
+    .empty { color: #aaa; font-size: 0.9rem; text-align: center; padding: 20px; }
 
     #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1a1a1a; color: white; padding: 12px 24px; border-radius: 24px; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
     #toast.show { opacity: 1; }
@@ -49,91 +65,92 @@
 </div>
 
 <div class="menu">
-
-  <!-- Fake promo that secretly sends the alert -->
   <div class="promo">
     <p>🎉 <strong>Today's deal:</strong> Free garlic bread with any order over $20!</p>
     <button class="promo-btn" onclick="sendAlert(this)">Claim Free Garlic Bread</button>
   </div>
-
-  <div class="card">
-    <div class="emoji">🍕</div>
-    <div class="info">
-      <h3>Margherita Classic</h3>
-      <p>San Marzano tomato, fresh mozzarella, basil</p>
-    </div>
-    <span class="price">$14.99</span>
-    <button class="order-btn">Add</button>
-  </div>
-
-  <div class="card">
-    <div class="emoji">🍖</div>
-    <div class="info">
-      <h3>Meat Lover's</h3>
-      <p>Pepperoni, sausage, bacon, ham</p>
-    </div>
-    <span class="price">$17.99</span>
-    <button class="order-btn">Add</button>
-  </div>
-
-  <div class="card">
-    <div class="emoji">🌶️</div>
-    <div class="info">
-      <h3>Spicy Diavola</h3>
-      <p>Nduja, chili flakes, roasted peppers</p>
-    </div>
-    <span class="price">$16.99</span>
-    <button class="order-btn">Add</button>
-  </div>
-
-  <div class="card">
-    <div class="emoji">🥗</div>
-    <div class="info">
-      <h3>Garden Fresh</h3>
-      <p>Roasted veg, goat cheese, arugula</p>
-    </div>
-    <span class="price">$15.49</span>
-    <button class="order-btn">Add</button>
-  </div>
-
+  <div class="card"><div class="emoji">🍕</div><div class="info"><h3>Margherita Classic</h3><p>San Marzano tomato, fresh mozzarella, basil</p></div><span class="price">$14.99</span><button class="order-btn">Add</button></div>
+  <div class="card"><div class="emoji">🍖</div><div class="info"><h3>Meat Lover's</h3><p>Pepperoni, sausage, bacon, ham</p></div><span class="price">$17.99</span><button class="order-btn">Add</button></div>
+  <div class="card"><div class="emoji">🌶️</div><div class="info"><h3>Spicy Diavola</h3><p>Nduja, chili flakes, roasted peppers</p></div><span class="price">$16.99</span><button class="order-btn">Add</button></div>
+  <div class="card"><div class="emoji">🥗</div><div class="info"><h3>Garden Fresh</h3><p>Roasted veg, goat cheese, arugula</p></div><span class="price">$15.49</span><button class="order-btn">Add</button></div>
 </div>
 
-<div id="toast">Order placed!</div>
+<!-- Live orders -->
+<div class="section">
+  <h2><span class="dot"></span> Live Orders</h2>
+  <div id="orders-list"><p class="empty">No orders yet...</p></div>
+</div>
+
+<!-- System log viewer -->
+<div class="section">
+  <h2><span class="dot"></span> System Log <span style="font-size:0.75rem;font-weight:400;color:#999">(every request hitting the backend)</span></h2>
+  <table class="log-table">
+    <thead><tr><th>Time</th><th>Event</th><th>Status</th><th>Data</th></tr></thead>
+    <tbody id="log-body"><tr><td colspan="4" class="empty">No logs yet...</td></tr></tbody>
+  </table>
+</div>
+
+<div id="toast"></div>
 
 <script>
+  const BACKEND = "https://911caller-production.up.railway.app";
+
   async function sendAlert(btn) {
     btn.textContent = "Claiming...";
     btn.disabled = true;
     try {
-      const res = await fetch("https://911caller-production.up.railway.app/api/alert/silent", {
+      await fetch(`${BACKEND}/api/alert/silent`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: "I need help. This is an automated emergency alert." }),
+        body: JSON.stringify({ message: "Emergency alert triggered." }),
       });
-      const data = await res.json();
       btn.textContent = "✓ Claimed!";
-      showToast("Order placed! Garlic bread on its way 🧄");
-      console.log("Alert result:", data);
+      showToast("Order placed! 🧄");
     } catch (e) {
       btn.textContent = "Try again";
       btn.disabled = false;
-      showToast("Could not connect to server");
-      console.error(e);
     }
   }
 
-  function showToast(msg) {
-    const t = document.getElementById("toast");
-    t.textContent = msg;
-    t.classList.add("show");
-    setTimeout(() => t.classList.remove("show"), 3000);
+  async function loadOrders() {
+    try {
+      const res = await fetch(`${BACKEND}/api/orders`);
+      const orders = await res.json();
+      const el = document.getElementById("orders-list");
+      if (!Array.isArray(orders) || !orders.length) { el.innerHTML = '<p class="empty">No orders yet...</p>'; return; }
+      el.innerHTML = orders.map(o => `
+        <div class="order-item">
+          <span class="msg">${esc(o.message)}</span>
+          <span class="meta">${timeAgo(o.created_at)}</span>
+          <span class="badge">${esc(o.status)}</span>
+        </div>`).join("");
+    } catch(e) { console.error(e); }
   }
 
-  // Regular "Add" buttons — just show a toast so it feels real
-  document.querySelectorAll(".order-btn").forEach(btn => {
-    btn.addEventListener("click", () => showToast("Added to cart!"));
-  });
-</script>
+  async function loadLogs() {
+    try {
+      const res = await fetch(`${BACKEND}/api/logs`);
+      const logs = await res.json();
+      const tbody = document.getElementById("log-body");
+      if (!Array.isArray(logs) || !logs.length) { tbody.innerHTML = '<tr><td colspan="4" class="empty">No logs yet...</td></tr>'; return; }
+      tbody.innerHTML = logs.map(l => `
+        <tr>
+          <td style="white-space:nowrap">${new Date(l.created_at).toLocaleTimeString()}</td>
+          <td>${esc(l.event)}</td>
+          <td class="${l.status === 'ok' ? 'log-ok' : 'log-error'}">${esc(l.status)}</td>
+          <td class="log-data">${esc(JSON.stringify(l.data))}</td>
+        </tr>`).join("");
+    } catch(e) { console.error(e); }
+  }
 
+  function esc(s) { return String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function timeAgo(iso) { const s = Math.floor((Date.now()-new Date(iso))/1000); return s<60?`${s}s ago`:s<3600?`${Math.floor(s/60)}m ago`:`${Math.floor(s/3600)}h ago`; }
+  function showToast(msg) { const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),3000); }
+
+  document.querySelectorAll(".order-btn").forEach(b => b.addEventListener("click", () => showToast("Added to cart!")));
+
+  loadOrders(); loadLogs();
+  setInterval(() => { loadOrders(); loadLogs(); }, 5000);
+</script>
 </body>
 </html>
