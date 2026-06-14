@@ -23,7 +23,7 @@ app.use("/api/alert", alertRouter);
 app.use("/api/upload", uploadRouter);
 app.use("/api/orders", ordersRouter);
 
-app.get("/health", (_req, res) => res.json({ ok: true }));
+app.get("/health", (_req, res) => res.json({ ok: true, v: 2, routes: ["orders","agent","alert","upload"] }));
 
 const PORT = process.env.PORT ?? 3001;
 app.listen(PORT, () => console.log(`Safe911 backend running on :${PORT}`));
