@@ -9,6 +9,7 @@ import alertRouter from "./routes/alert.js";
 import uploadRouter from "./routes/upload.js";
 import ordersRouter from "./routes/orders.js";
 import logsRouter from "./routes/logs.js";
+import recordingsRouter from "./routes/recordings.js";
 import { requestLogger } from "./services/logger.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -26,6 +27,7 @@ app.use("/api/alert", alertRouter);
 app.use("/api/upload", uploadRouter);
 app.use("/api/orders", ordersRouter);
 app.use("/api/logs", logsRouter);
+app.use("/api/recordings", recordingsRouter);
 
 app.get("/health", (_req, res) => res.json({ ok: true, v: 2, routes: ["orders","agent","alert","upload"] }));
 
